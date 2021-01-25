@@ -3,11 +3,16 @@
 
 import pyinputplus as pyip
 
+# keep track of order to display at end:
+order = {}
+
 # bread type:
 bread = pyip.inputMenu(['wheat', 'white', 'sourdough'], numbered = True)
+order["bread"] = bread
 
 # protein:
 protein = pyip.inputMenu(['chicken', 'turkey', 'ham', 'tofu'], numbered=True)
+order["protein"] = protein
 
 # cheese:
 wantCheese = pyip.inputYesNo('Want cheese?')
@@ -15,6 +20,7 @@ wantCheese = pyip.inputYesNo('Want cheese?')
 cheese = ''
 if wantCheese == 'yes':
     cheese = pyip.inputMenu(['cheddar', 'Swiss', 'mozzarella'], numbered=True)
+order["cheese"] = cheese
 
 # extras
 wantExtras = pyip.inputYesNo('want any of the following? - mayo, mustard, lettuce, or tomato - (answer yes or no)' )
@@ -24,6 +30,7 @@ extras = {
     'lettuce': 0,
     'tomato': 0
 }
+
 if wantExtras == 'yes':
     print('ok, options coming at you fast then. answer yes or no')
     for k, v in extras.items():
@@ -32,8 +39,14 @@ if wantExtras == 'yes':
 else: 
     print('suit yourself')
 
+# add extras to ordered
+for k, v in extras.items():
+    order[k] = v
+
 # number of sandwiches
 number = pyip.inputNum('How many sandwiches would you like?', min=1)
+order['quantity'] = number
+
 
 prices = {
     'bread': {
@@ -73,5 +86,16 @@ totalCost = prices['bread'][bread] + prices['protein'][protein] + prices['cheese
 
 # cost for total order 
 Cost = round(totalCost * number, 2)
-print(f'total cost of order: ${Cost}')
+
+def printPrettySandwich(itemsDict, leftWidth, rightWidth):
+    print()
+    print('Your order is:'.center(leftWidth + rightWidth))
+    for k, v in itemsDict.items():
+        print(k.ljust(leftWidth, '.') + str(v).rjust(rightWidth))
+
+
+printPrettySandwich(order, 10, 10)
+print('-'*20)
+print(f'Your total bill is ${Cost}')
+
 

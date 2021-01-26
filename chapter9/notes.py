@@ -1,5 +1,5 @@
 from pathlib import Path
-# format paths supplied as suitable to the caller's device 
+# format paths supplied as suitable to the caller's device and OS (Windows, mac, Linux)
 
 myPath = Path('spam', 'bacon', 'eggs')   # returns Path object PosixPath('spam/bacon/eggs') on mac/Linux, WindowsPath('spam/bacon/eggs') on Windows
 # to get path as string
@@ -75,3 +75,57 @@ for filename in os.listdir(Path.cwd()):
     totalSize += os.path.getsize(os.path.join(Path.cwd(),filename))
 
 print(totalSize) # 12964
+
+# use glob() as way to get at files in a particular directory more convenients
+p = Path.cwd()
+p.glob('*') # returns generator object, * stands for all files in that directory
+list(p.glob('*'))
+
+# can treat glob argument as simplified regular expressions (* means multiple of an characters)
+list(p.glob('*.text')) # to list all text files
+# '?' stands for single character
+
+for filePath in list(p.glob('*')):
+    print(filePath)     # prints as string
+    # do something with the file
+
+
+# check path exists on the computer to avoid errors
+t = Path.cwd().exists() # True
+f = Path('fakePath').exists() # False
+print(t)
+print(f)
+
+# note different file types (binary files), will have different libraries to work with them
+
+# for plaintext files, pathlib module useful
+p = Path('spam.txt')
+p.write_text('Hello, world!') # creates (writes) a new text file and returns 13, i.e  the number of characters in that text file
+
+# more commen, general steps for writing to a file
+# 1. call the open() funciton to return a File object
+helloFile = open(Path.cwd()/'spam.txt') # opens in read mode (i.e. can't edit/write to the file). (the default, but can make it explicit by adding 'r' as second argument)
+
+# 2. call the read() or write() function on the File object
+# reading files
+helloFile.read() # 'Hello, world!'
+helloFile.readlines() # returns list of lines in text file
+
+# writing files, use 'w' as second argument, and 'a' for append mode
+baconFile = open('bacon.txt', 'w')
+baconFile.write('Hello,world!\n')   # will create new file if baconFile doesn't exist already
+baconFile.close()
+baconFile = open('bacon.txt', 'a')
+baconFile.write('Bacon is great!') # baconFile now 'Hello, world!\nBacon is great!'
+baconFile.close()
+
+# 3. close the file by calling the close() method on the File object
+# baconFile.close()
+baconFile = open('bacon.txt', 'r')
+print(baconFile.read())
+
+
+
+
+
+

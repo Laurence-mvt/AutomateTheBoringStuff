@@ -31,11 +31,11 @@ for quizNum in range(35):
     quizFile.write(f"this is {quizNum} quiz\nName:\nDate:\n")
     answerFile.write(f"this is {quizNum} answer\n")
 
-    # TODO: Shuffle the order of the states.
+    # Shuffle the order of the states.
     states = list(capitals.keys())
     random.shuffle(states)
 
-    # TODO: Loop through all 50 states, making a question for each.
+    # Loop through all 50 states, making a question for each.
     for questionNum in range(50):
         correctAnswer = capitals[states[questionNum]]
         wrongAnswers = list(capitals.values())

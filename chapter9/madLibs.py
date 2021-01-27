@@ -17,10 +17,18 @@ adj2 = pyip.inputStr('Enter an adjective:   ').lower()
 newPoem = open(f"{userName}'s Poem", 'w')
 
 # load text from template text file
-template = Path('/Users/laurencefinch/Desktop/AutomateBoringStuff/AutomateTheBoringStuff/chapter9/templatePoem.txt').read_text()
-print(f'template:   {template}')
-print()
-print()
+template =  """There was a ADJECTIVE1 person of Brill,
+            Who purchased a NOUN with a frill;
+            But they said, "Don't you wish,
+            You mayn't VERB like a fish,
+            You ADJECTIVE2 old person of Brill?"""
+
+""" Original version: There was an old person of Brill, by Edward Lear
+    There was an old person of Brill,
+    Who purchased a shirt with a frill;
+    But they said, "Don't you wish,
+    You mayn't look like a fish,
+    You obsequious old person of Brill?"       """
 
 # sub words using regex
 newVersion = template

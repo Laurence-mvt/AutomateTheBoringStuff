@@ -61,7 +61,7 @@ print(p.parents[0]) # pathHere/parent/anotherparent
 print(p.parents[1]) # pathHere/parent
 print(p.name)       # name
 
-# get file size of th efile in the path argument
+# get file size of the file in the path argument
 ex = os.path.getsize(Path.cwd())
 print(ex) # 256
 

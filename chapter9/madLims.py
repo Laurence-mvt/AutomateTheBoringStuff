@@ -1,5 +1,5 @@
 #! python3
-# madLibs.py - Allows users to add their own adjectives, nouns, adverbs and verbs to an Edward Lear limerick, which is saved to a new text file
+# madLims.py - Allows users to add their own adjectives, nouns, adverbs and verbs to an Edward Lear limerick, which is saved to a new text file
 # https://www.public-domain-poetry.com/edward-lear/more-nonsense-limerick-19-23256
 
 import pyinputplus as pyip

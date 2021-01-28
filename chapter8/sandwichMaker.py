@@ -48,7 +48,7 @@ number = pyip.inputNum('How many sandwiches would you like?', min=1)
 order['quantity'] = number
 
 
-prices = {
+prices = {    
     'bread': {
         'wheat': 0.5,
         'white': 0.2,

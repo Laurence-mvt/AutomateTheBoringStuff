@@ -10,7 +10,8 @@ print(Path('spam') / 'bacon' / 'eggs')
 # this is safer than concatenating using '+', because '/' formats for the user's os automatically, unlike '+'
 
 # get the current working directory for the program 
-Path.cwd()
+p = Path.cwd()
+print(f'p: {p}')
 
 """
 # change cwd:
@@ -123,9 +124,3 @@ baconFile.close()
 # baconFile.close()
 baconFile = open('bacon.txt', 'r')
 print(baconFile.read())
-
-
-
-
-
-

@@ -39,5 +39,20 @@ elems[0].attrs # gets attributes as a dictionary, e.g. here = {'id': 'author'}
 
 elems[0].get('id') # 'author', i.e. returns value of attribute with key = 'id'
 
+# Can control the web browser using selenium module
+from selenium import webdriver
+
+browser = webdriver.Chrome('/Users/laurencefinch/Desktop/AutomateBoringStuff/chromedriver')
+browser.get('https://www.bbc.com')
+try:
+    elem = browser.find_element_by_class_name('orb-nav-sport')
+    print('Found <%s> element with that class name!' % (elem.tag_name))
+except:
+    print('Was not able to find an element with that name.')
+
+elem.click()    # clicks on the link found at 'orb-nav-sport' class
+
+
+
 
 

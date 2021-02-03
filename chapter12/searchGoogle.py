@@ -5,11 +5,11 @@ import bs4, requests, sys, webbrowser
 import logging
 
 logging.basicConfig(level=logging.DEBUG, format=' %(asctime)s -  %(levelname)s -  -  %(message)s')
+logging.disable(logging.CRITICAL)
 
 print('Searching for results...')
 # get search results
-# res = requests.get('https://www.google.com/search?q=' + ' '.join(sys.argv[1:]))
-res = requests.get('https://www.google.com/search?q=' + 'cheddar cheese')
+res = requests.get('https://www.google.com/search?q=' + ' '.join(sys.argv[1:]))
 res.raise_for_status()
 
 # get results links
@@ -21,10 +21,7 @@ for linkElem in linkElems:
     logging.debug('linkElem(%s)', linkElem)
 
     if linkElem.get('href')[:13] == '/url?q=https:':    # if propper search result link, add to list of results
-        searchResults.append(linkElem.get('href')) 
-
-for link in searchResults:
-    print(link)
+        searchResults.append(linkElem.get('href'))
 
 # open first 5 results
 numToOpen = min(5, len(searchResults))

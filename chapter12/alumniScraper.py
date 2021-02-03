@@ -37,6 +37,7 @@ browser.find_element_by_name('filter_location_city').send_keys('New York')
 
 # search for results
 browser.find_element_by_name('submit').click()
+time.sleep(2)
 
 # get alum cards, names, and other info
 alumCardElems = []
@@ -46,33 +47,39 @@ alumNameElems = []
 alumCardElems = alumCardElems + browser.find_elements_by_css_selector('.row.bizcard')
 alumNameElems = alumNameElems + browser.find_elements_by_css_selector('.media-heading.bizcard_zoom_activator')
 
+emails = []
+# get alum Ids
+alumIds = []
+for alum in alumCardElems:
+    alumIds.append(alum.get_attribute('id'))
 
-for nameElem in alumNameElems:
+for index, nameElem in enumerate(alumNameElems[:5]):
+    print(index)
     nameElem.click()
-    time.sleep(1)
-    # get the cards name section and click to reveal more info
-    #nameElem.click()
-
-
+    time.sleep(2)
     
+    # get primary email
+    # set xpath using alums Id
+    pathX = "//div[@id='" + alumIds[index] + "']//a[@class='btn btn-primary btn-xs']"
+    try:
+        emailElem = browser.find_element_by_xpath(pathX)
+        emails.append(emailElem.get_attribute('href'))
+    except:
+        emails.append(None) 
 
-"""
-    alumText = alum.text
-    if alumText !='':
-        print(alum.text)
-    else:
-        print('null string')    # some null strings in results"""
+for email in emails:
+    print(email)
 
-    #browser.find_element_by_css_selector('media-heading.bizcard_zoom_activator').click()
+# for each .row.bizcard alumCardElem
+
+# TODO: check if have primary email, if not set to null
+
+    # TODO: if yes, add to alum record (dictionary?) and check if have a secondary email
+
+        # TODO: if yes, add to alum record; if not set to null
+
+#postcard_\%2FpGvQFtxvec\%3D > div:nth-child(1) > div > a
 
 """# scroll down to get next 100
 htmlElem = browser.find_element_by_tag_name('html')
 htmlElem.send_keys(Keys.END) # scroll to bottom"""
-
-#lD2hTINqhyg\%3D > div.col-sm-10 > h4
-#L5iR9bkpLAQ\%3D > div.col-sm-10 > h4
-
-
-
-
-

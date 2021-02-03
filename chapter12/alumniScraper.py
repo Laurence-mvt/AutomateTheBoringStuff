@@ -4,6 +4,10 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import pyinputplus, sys, time
+import logging
+
+logging.basicConfig(level=logging.DEBUG, format=' %(asctime)s -  %(levelname)s -  %(message)s')
+# logging.disable(logging.CRITICAL)
 
 # get email and password
 userEmail = sys.argv[1]
@@ -46,37 +50,38 @@ alumNameElems = []
 # get first 100 results of alumni cards
 alumCardElems = alumCardElems + browser.find_elements_by_css_selector('.row.bizcard')
 alumNameElems = alumNameElems + browser.find_elements_by_css_selector('.media-heading.bizcard_zoom_activator')
+logging.debug('length of alumCardElems: ' + str(len(alumCardElems)) + '| length of alumNameElems: ' + str(len(alumNameElems)))
 
 emails = []
+
 # get alum Ids
 alumIds = []
 for alum in alumCardElems:
     alumIds.append(alum.get_attribute('id'))
 
+for email in emails:
+    print(email)
+
+# for each .row.bizcard alumCardElem
 for index, nameElem in enumerate(alumNameElems[:5]):
+    
     print(index)
     nameElem.click()
     time.sleep(2)
-    
+
+# check if have primary email, if not set to null    
     # get primary email
     # set xpath using alums Id
     pathX = "//div[@id='" + alumIds[index] + "']//a[@class='btn btn-primary btn-xs']"
     try:
         emailElem = browser.find_element_by_xpath(pathX)
-        emails.append(emailElem.get_attribute('href'))
+        emails.append(emailElem.get_attribute('href')[7:])  # splice to remove the 'mailto:' at beginning of email
     except:
         emails.append(None) 
 
-for email in emails:
-    print(email)
+# TODO: check if have a secondary email
 
-# for each .row.bizcard alumCardElem
-
-# TODO: check if have primary email, if not set to null
-
-    # TODO: if yes, add to alum record (dictionary?) and check if have a secondary email
-
-        # TODO: if yes, add to alum record; if not set to null
+    # TODO: if yes, add to alum record; if not set to null
 
 #postcard_\%2FpGvQFtxvec\%3D > div:nth-child(1) > div > a
 

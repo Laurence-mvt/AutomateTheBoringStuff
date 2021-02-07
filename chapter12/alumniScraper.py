@@ -86,7 +86,7 @@ for alum in alumCardElems:
     alumIds.append(alum.get_attribute('id'))
 
 # for each .row.bizcard alumCardElem
-for index, nameElem in enumerate(alumNameElems[:20]):
+for index, nameElem in enumerate(alumNameElems):
     logging.info(f'index: {index}')
     alum = {}
     
@@ -155,7 +155,7 @@ regexWork = re.compile(r'(work: (.*))', re.DOTALL)
 regexHome = re.compile(r'(Home: (.*))', re.DOTALL)
 
 
-for alum in alumList[:20]:
+for alum in alumList:
     numberLines = countNewLines(alum['addresses'])
     
     # if both work and home addresses

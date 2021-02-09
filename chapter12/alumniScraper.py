@@ -40,23 +40,15 @@ def quickLoad(mail, passwrd):
 
 browser = quickLoad(userEmail, userPass)
 
-# get alum cards, names, and other info
-alumDetails = []
-"""alum = {"name": 'exampleName', 
-        "location": 'exampleLocation', 
-        "experience": 'exampleExperience',
-        "primaryEmail": 'examplePrimary',
-        "secondaryEmail": 'exampleSecondary',
-        "addresses": 'exampleAddresses',
-        "workAddress": 'exampleWork',
-        "homeAddress": 'exampleHome'}
-"""
+# get alum cards and names to interate over
+
 alumCardElems = []
 alumNameElems = []
 
 # Scroll down page to load all results
 # Get scroll height
 lastHeight = browser.execute_script("return document.body.scrollHeight;")
+time.sleep(2)
 while True:
     # scroll to end
     browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
@@ -89,30 +81,24 @@ for alum in alumCardElems:
 for index, nameElem in enumerate(alumNameElems):
     logging.info(f'index: {index}')
     alum = {}
-    
     # get alums Id
     alumId = str(alumIds[index])
-    
     # reveal alum info
     nameElem.click()
     time.sleep(2)
-    
     # Get alum name
     alum["name"] = nameElem.text
-    
     # Get location
     # set xpath for addresses using alums Id
     locationPathX = "//*[@id='" + alumId + "']//div[@class='col-sm-10']"
     locationWithName = browser.find_element_by_xpath(locationPathX).text # contains alum name
     locationNoName = locationWithName.replace(alum["name"], "").strip()
     alum["location"] = locationNoName
-    
     # Get addresses
     # set xpath for addresses using alums Id
     #homePathX = "//div[@id='" + alumId + "']//a[@class='btn btn-primary btn-xs']"
     addressPathX = "//*[@id='postcard_" + alumId + "']/div[2]"
     alum["addresses"] = browser.find_element_by_xpath(addressPathX).text
-    
     # Get work experience
     experiencePathX = "//div[@id='" + alumId + "']//b"
     # check if have work experience, if not set to null
@@ -120,7 +106,6 @@ for index, nameElem in enumerate(alumNameElems):
         alum["experience"] = browser.find_element_by_xpath(experiencePathX).text
     except:
         alum["experience"] = None
-    
     # Get emails
     # check if have primary email, if not set to null    
     # set xpath for primary email using alums Id
@@ -138,7 +123,6 @@ for index, nameElem in enumerate(alumNameElems):
         alum["secondaryEmail"] = secEmailElem.get_attribute('href')[7:] # splice to remove the 'mailto:' at beginning of email
     except:
         alum["secondaryEmail"] = None
-    
     # Add alum to alum list 
     alumList.append(alum)
 
@@ -157,29 +141,26 @@ regexHome = re.compile(r'(Home: (.*))', re.DOTALL)
 
 for alum in alumList:
     numberLines = countNewLines(alum['addresses'])
-    
     # if both work and home addresses
     if numberLines == 2: 
         moBoth = regexBoth.search(alum['addresses'])
         alum["workAddress"] = moBoth.group(2)
         alum["homeAddress"] = moBoth.group(3)
-    
     # if only one address, check what type of address
     elif numberLines == 1:
         moHome = regexHome.search(alum['addresses'])
         moWork = regexWork.search(alum['addresses'])
-    
         # check if work address
         if moWork != None:
             alum["workAddress"] = moWork.group(2)
+            alum["homeAddress"] = None
         else:
             alum["homeAddress"] = moHome.group(2)
-    
+            alum["workAddress"] = None
     # if no addresses
     else:
         alum["homeAddress"] = None
         alum["workAddress"] = None
-    
     # delete addresses key from alum
     alum.pop('addresses', None) 
 

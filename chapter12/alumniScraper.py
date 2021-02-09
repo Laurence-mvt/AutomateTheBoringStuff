@@ -3,7 +3,7 @@
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-import pyinputplus, sys, time, logging, pprint, re
+import pyinputplus, sys, time, logging, pprint, re, csv
 
 logging.basicConfig(level=logging.INFO, format=' %(asctime)s -  %(levelname)s -  %(message)s')
 # logging.disable(logging.CRITICAL)
@@ -138,35 +138,50 @@ regexBoth = re.compile(r'(work: (.*)Home: (.*))', re.DOTALL)
 regexWork = re.compile(r'(work: (.*))', re.DOTALL)
 regexHome = re.compile(r'(Home: (.*))', re.DOTALL)
 
+print(f'alumList[-2:]:')
+pprint.pprint(alumList[-2:])
+
 
 for alum in alumList:
     numberLines = countNewLines(alum['addresses'])
     # if both work and home addresses
-    if numberLines == 2: 
-        moBoth = regexBoth.search(alum['addresses'])
-        alum["workAddress"] = moBoth.group(2)
-        alum["homeAddress"] = moBoth.group(3)
-    # if only one address, check what type of address
-    elif numberLines == 1:
-        moHome = regexHome.search(alum['addresses'])
-        moWork = regexWork.search(alum['addresses'])
-        # check if work address
-        if moWork != None:
-            alum["workAddress"] = moWork.group(2)
-            alum["homeAddress"] = None
+    try:
+        if numberLines == 2: 
+            moBoth = regexBoth.search(alum['addresses'])
+            alum["workAddress"] = moBoth.group(2)
+            alum["homeAddress"] = moBoth.group(3)
+        # if only one address, check what type of address
+        elif numberLines == 1:
+            moWork = regexWork.search(alum['addresses'])
+            moHome = regexHome.search(alum['addresses'])
+            # check if work address
+            if moWork != None:
+                alum["workAddress"] = moWork.group(2)
+                alum["homeAddress"] = None
+            else:
+                alum["homeAddress"] = moHome.group(2)
+                alum["workAddress"] = None
+        # if no addresses
         else:
-            alum["homeAddress"] = moHome.group(2)
+            alum["homeAddress"] = None
             alum["workAddress"] = None
-    # if no addresses
-    else:
-        alum["homeAddress"] = None
-        alum["workAddress"] = None
-    # delete addresses key from alum
-    alum.pop('addresses', None) 
+        # delete addresses key from alum
+        alum.pop('addresses', None) 
+    except AttributeError: # deal with case of regex matched output = None
+        logging.debug(f'alum: {alum} | alum[addresses]: {alum["addresses"]}')
+        continue
 
 pprint.pprint(alumList)
 
-# write to a file
-fileObj = open('/Users/laurencefinch/Desktop/AutomateBoringStuff/alumList2.py', 'w')
+# write to a .py file
+fileObj = open('/Users/laurencefinch/Desktop/AutomateBoringStuff/alumList.py', 'w')
 fileObj.write('alums = ' + pprint.pformat(alumList) + '\n')
 fileObj.close()
+
+# write to a CSV file
+outputFile = open('/Users/laurencefinch/Desktop/AutomateBoringStuff/alumList.csv', 'w')
+outputDictWriter = csv.DictWriter(outputFile, ['name', 'location', 'experience', 'primaryEmail', 'secondaryEmail', 'workAddress', 'homeAddress'])
+outputDictWriter.writeheader()
+for alum in alumList:
+    outputDictWriter.writerow(alum)
+outputFile.close()

@@ -1,5 +1,5 @@
-#! usr/bin/env bash
-# alumniScraper.py - Scrapes LSE alumni emails from the US alumni website, for the sake of practice only 
+#! /usr/bin/env bash
+# python3 alumniScraper.py - Scrapes LSE alumni emails from the US alumni website, for the sake of practice only 
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys

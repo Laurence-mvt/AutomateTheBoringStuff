@@ -51,3 +51,18 @@ outputDictWriter.writerow({'Name': 'Bob', 'Phone': '555-9999'}) # missing keys w
 outputDictWriter.writerow({'Phone': '555-5555', 'Name': 'Carol', 'Pet':'dog'})
 outputFile.close()
 
+# JSON data a common data format for APIs
+# JSON can only store values of data types: strings, integers, floats, Booleans, lists, dictionaries, and NoneType
+# can't represent Python-specific objects like File objects, CSV reader or writer objections, Regex objects, or Selenium WebElement objects
+
+stringOfJsonData = '{"name": "Zophie", "isCat": true, "miceCaught": 0, "felineIQ": null}' 
+# note JSON strings always use double quotes
+import json
+jsonDataAsPythonValue = json.loads(stringOfJsonData)    # .loads() is read 'load string', not 'loads'
+jsonDataAsPythonValue   # returns as dictionary: {"name": "Zophie", "isCat": true, "miceCaught": 0, "felineIQ": null}
+
+# write a JSON formatted string with json.dumps(), meaning 'dump string', not 'dumps'
+pythonValue = {'isCat': True, 'miceCaught': 0, 'name': 'Zophie', 'felineIQ': None}
+import json
+stringOfJsonData = json.dumps(pythonValue)  # '{"isCat": True ... "felineIQ": None}, although key-value pairs are unordered
+

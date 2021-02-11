@@ -125,6 +125,7 @@ for index, nameElem in enumerate(alumNameElems):
         alum["secondaryEmail"] = None
     # Add alum to alum list 
     alumList.append(alum)
+    logging.debug(f"{alum}")
 
 # Parse addresses in alumList into separate work and home addresses
 
@@ -134,8 +135,8 @@ def countNewLines(addresses):
     return len(mo)
 
 # set regex to detect if have both addresses, or just one of work or home address
-regexBoth = re.compile(r'(work: (.*)Home: (.*))', re.DOTALL)
-regexWork = re.compile(r'(work: (.*))', re.DOTALL)
+regexBoth = re.compile(r'((work: |Work: |Seasonal: )(.*)Home: (.*))', re.DOTALL)
+regexWork = re.compile(r'((work: |Work: |Seasonal: )(.*))', re.DOTALL)
 regexHome = re.compile(r'(Home: (.*))', re.DOTALL)
 
 print(f'alumList[-2:]:')
@@ -148,15 +149,15 @@ for alum in alumList:
     try:
         if numberLines == 2: 
             moBoth = regexBoth.search(alum['addresses'])
-            alum["workAddress"] = moBoth.group(2)
-            alum["homeAddress"] = moBoth.group(3)
+            alum["workAddress"] = moBoth.group(3)
+            alum["homeAddress"] = moBoth.group(4)
         # if only one address, check what type of address
         elif numberLines == 1:
             moWork = regexWork.search(alum['addresses'])
             moHome = regexHome.search(alum['addresses'])
             # check if work address
             if moWork != None:
-                alum["workAddress"] = moWork.group(2)
+                alum["workAddress"] = moWork.group(3)
                 alum["homeAddress"] = None
             else:
                 alum["homeAddress"] = moHome.group(2)
@@ -165,21 +166,23 @@ for alum in alumList:
         else:
             alum["homeAddress"] = None
             alum["workAddress"] = None
-        # delete addresses key from alum
-        alum.pop('addresses', None) 
-    except AttributeError: # deal with case of regex matched output = None
+    except AttributeError: # deal with case of regex matched output = None, when address format weird
+        alum["homeAddress"] = None
+        alum["workAddress"] = None
         logging.debug(f'alum: {alum} | alum[addresses]: {alum["addresses"]}')
         continue
+    # delete addresses key from alum
+    alum.pop('addresses', None) 
 
 pprint.pprint(alumList)
 
 # write to a .py file
-fileObj = open('/Users/laurencefinch/Desktop/AutomateBoringStuff/alumList.py', 'w')
+fileObj = open('/Users/laurencefinch/Desktop/AutomateBoringStuff/alumList2.py', 'w')
 fileObj.write('alums = ' + pprint.pformat(alumList) + '\n')
 fileObj.close()
 
 # write to a CSV file
-outputFile = open('/Users/laurencefinch/Desktop/AutomateBoringStuff/alumList.csv', 'w')
+outputFile = open('/Users/laurencefinch/Desktop/AutomateBoringStuff/alumList2.csv', 'w')
 outputDictWriter = csv.DictWriter(outputFile, ['name', 'location', 'experience', 'primaryEmail', 'secondaryEmail', 'workAddress', 'homeAddress'])
 outputDictWriter.writeheader()
 for alum in alumList:

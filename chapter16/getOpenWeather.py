@@ -4,7 +4,7 @@
 
 import sys, json, requests
 
-APPID = #API_key_here
+APPID = "keyHere"
 
 # Compute location from command line arguments
 if len(sys.argv) <2:

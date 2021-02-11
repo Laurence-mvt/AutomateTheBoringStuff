@@ -16,20 +16,36 @@ testAddress2 = {'addresses': 'Addresses:\n'
 testAddress3 = {'addresses': 'Addresses:\n'
                'Home: [ Street address hidden ] New York NY 10162 United '
                'States'}
+testAddress4 = {'addresses': 'Addresses:\n'
+               'Seasonal: [ Street address hidden ] Glendale CA 91206 United '
+               'States\n'
+               'Home: 195 Stanton Street 6F New York NY 10002 United States'}
+testAddress5 = {'addresses': 'Addresses:\n'
+               'Work: 80 Broad Street Suite 1801 New York NY 10004 United '
+               'States\n'
+               'Home: [ Street address hidden ] New York NY 10022 United '
+               'States'}
+testAddress6 ={'addresses': 'Addresses:\n'
+               'Work: [ Street address hidden ] New York NY 10017 United '
+               'States'}
+testAddress7 = {'addresses': 'Addresses:\n'
+               'Seasonal: [ Street address hidden ] New York NY 10017 United '
+               'States'}
 
-addressBook = [testAddress1, testAddress2, testAddress3]
+addressBook = [testAddress1, testAddress2, testAddress3, testAddress4, testAddress5, testAddress6, testAddress7]
 
 def countNewLines(addresses):
     newLineRegex = re.compile("\n")
     mo = newLineRegex.findall(addresses)
     return len(mo)
 
-regexBoth = re.compile(r'(work: (.*)Home: (.*))', re.DOTALL)
-regexWork = re.compile(r'(work: (.*))', re.DOTALL)
+regexBoth = re.compile(r'((work: |Work: |Seasonal: )(.*)Home: (.*))', re.DOTALL)
+regexWork = re.compile(r'((work: |Work: |Seasonal: )(.*))', re.DOTALL)
 regexHome = re.compile(r'(Home: (.*))', re.DOTALL)
 
-
+i = 1
 for entry in addressBook:
+    print(f'entry: {i}')
     numberLines = countNewLines(entry['addresses'])
     # if both work and home addresses
     if numberLines == 2: 
@@ -57,6 +73,6 @@ for entry in addressBook:
     else:
         # set both addresses to None
         continue
-
+    i += 1
 
 

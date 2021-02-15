@@ -166,23 +166,24 @@ for alum in alumList:
         else:
             alum["homeAddress"] = None
             alum["workAddress"] = None
-    except AttributeError: # deal with case of regex matched output = None, when address format weird
+    except: # in case of weird address formats
         alum["homeAddress"] = None
         alum["workAddress"] = None
+        alum.pop('addresses', None) 
         logging.debug(f'alum: {alum} | alum[addresses]: {alum["addresses"]}')
         continue
     # delete addresses key from alum
     alum.pop('addresses', None) 
 
-pprint.pprint(alumList)
+# pprint.pprint(alumList)
 
 # write to a .py file
-fileObj = open('/Users/laurencefinch/Desktop/AutomateBoringStuff/alumList2.py', 'w')
+fileObj = open('/Users/laurencefinch/Desktop/AutomateBoringStuff/alumList3.py', 'w')
 fileObj.write('alums = ' + pprint.pformat(alumList) + '\n')
 fileObj.close()
 
 # write to a CSV file
-outputFile = open('/Users/laurencefinch/Desktop/AutomateBoringStuff/alumList2.csv', 'w')
+outputFile = open('/Users/laurencefinch/Desktop/AutomateBoringStuff/alumList3.csv', 'w')
 outputDictWriter = csv.DictWriter(outputFile, ['name', 'location', 'experience', 'primaryEmail', 'secondaryEmail', 'workAddress', 'homeAddress'])
 outputDictWriter.writeheader()
 for alum in alumList:

@@ -51,8 +51,24 @@ column2 = list(sheet.columns)[1] # to get second column
 for cellObj in row2:
     print(cellObj.value)
 
+# Writing Excel docs
+wb = openpyxl.Workbook() # Create a blank workbook
+wb.sheetnames # ['Sheet']
+sheet = wb.active
+sheet.title = 'Spam Bacon Eggs Sheet' # Change sheet title
+wb.save('example_copy.xlsx') # Save the workbook as example_copy.xlsx
+# best to always save an existing workbook as a copy with a different name in case you get a bug in your code that screws things up
 
+# add a sheet
+wb.create_sheet(index=0, title='FirstSheet') # creates a new sheet at index 0, retuns that sheet object
+wb.sheetnames # ['FirstSheet', 'Spam Bacon Eggs Sheet']
+wb.create_sheet(title='NewSheet')
+del wb['NewSheet']  # delete a worksheet
+wb.save('example_copy.xlsx')
 
-
-
+# Writing values to cells
+wb = openpyxl.Workbook()
+sheet = wb['Sheet']
+sheet['A1'] = 'hello, world!' # Edit the cell's value
+sheet['A1'].value   # 'hello, world!'
 

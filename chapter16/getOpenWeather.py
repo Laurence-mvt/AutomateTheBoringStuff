@@ -2,9 +2,9 @@
 # /usr/bin/env bash
 # getOpenWeather.py - prints 2 day weather forecast for command line location
 
-import sys, json, requests
-
 APPID = "keyHere"
+
+import sys, json, requests
 
 # Compute location from command line arguments
 if len(sys.argv) <2:
@@ -17,5 +17,5 @@ url = f"https://api.openweathermap.org/data/2.5/forecast/daily?q={location}&cnt=
 response = requests.get(url)
 response.raise_for_status()
 
-print(response)
+print(response.text)
 # TODO: Load JSON data into a Python variable.

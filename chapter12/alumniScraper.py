@@ -3,7 +3,8 @@
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-import pyinputplus, sys, time, logging, pprint, re, csv
+import pyinputplus, sys, time, logging, pprint, re, csv, openpyxl
+from openpyxl.utils import get_column_letter
 
 logging.basicConfig(level=logging.INFO, format=' %(asctime)s -  %(levelname)s -  %(message)s')
 # logging.disable(logging.CRITICAL)
@@ -189,3 +190,22 @@ outputDictWriter.writeheader()
 for alum in alumList:
     outputDictWriter.writerow(alum)
 outputFile.close()
+
+# write to Excel file 
+outputExcel = openpyxl.Workbook()
+sheet = outputExcel.active
+sheet.title = "New York alums"
+# set Headers
+i = 0
+for header in ['name', 'location', 'experience', 'homeAddress', 'workAddress', 'primaryEmail', 'secondaryEmail']:
+    sheet[get_column_letter(i) + str(1)] = header
+    i += 1
+# loop over alums
+currentRow = 1
+for alum in alumList:
+    currentRow += 1
+    # add alum details to the corresponding for that row (alum)
+    for col in range(1, 8):
+        sheet.cell(row=currentRow, column=col).value = alum[sheet.cell(row=1, column=col).value]
+# save Excel
+outputExcel.save('alumList.xlsx')

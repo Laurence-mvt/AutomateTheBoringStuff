@@ -72,3 +72,66 @@ sheet = wb['Sheet']
 sheet['A1'] = 'hello, world!' # Edit the cell's value
 sheet['A1'].value   # 'hello, world!'
 
+# Style cells
+# to set font styles
+from openpyxl.styles import Font
+wb = openpyxl.Workbook()
+sheet = wb['Sheet']
+italic24Font = Font(size=24, italic=True) # Create a font
+sheet['A1'].font = italic24Font # apply the font to A1
+sheet['A1'] = 'hello,world!'
+wb.save('styles.xlsx')
+
+# Formulas
+wb = openpyxl.Workbook()
+sheet = wb.active
+sheet['A1'] = 200
+sheet['A2'] = 300
+sheet['A3'] = '=SUM(A1:A2)' # Set the formula
+wb.save('writeFormula.xlsx')
+
+# Adjust Rows and Columns
+wb = openpyxl.Workbook()
+sheet = wb.active
+sheet['A1'] = 'Tall row'
+sheet['B2'] = 'Wide column'
+# set the height and width:
+sheet.row_dimensions[1].height = 70 
+sheet.column_dimensions['B'].width = 20
+wb.save('dimensions.xlsx')
+
+# merge cells
+wb = openpyxl.Workbook()
+sheet = wb.active
+sheet.merge_cells('A1:D3') # merge all these cells
+sheet['A1'] = 'Twelve cells merged together'
+sheet.merge_cells('C5:D5') # merge these two cells
+sheet['C5'] = 'Two merged cells'
+wb.save('merged.xlsx')
+
+# unmerge 
+sheet.unmerge_cells('A1:D3') # unmerge these cells
+wb.save('merged.xlss')
+
+# freeze panes
+sheet.freeze_panes = 'A2' # freeze first row
+sheet.freeze_panes = 'C2' # freeze first row and columns A and B
+sheet.freeze_panes = None
+
+# Charts
+wb = openpyxl.Workbook()
+sheet = wb.active
+for i in range(1, 11): # create some data in column !
+    sheet['A'+str(i)] = i
+
+refObj = openpyxl.chart.Reference(sheet, min_col=1, min_row=1, max_col=1, max_row=10)   # create a reference object
+seriesObj = openpyxl.chart.Series(refObj, title='First series') # create a series object from refernce object
+chartObj = openpyxl.chart.BarChart()    # create  a bar chart
+chartObj.title = 'My Chart'
+chartObj.append(seriesObj)
+
+sheet.add_chart(chartObj, 'C5') # add chart to sheet with top left corner at cell C5
+wb.save('sampleChart.xlsx')
+
+# can also create line charts, scatter charts, and pie charts
+

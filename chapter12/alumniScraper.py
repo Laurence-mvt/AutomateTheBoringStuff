@@ -208,4 +208,4 @@ for alum in alumList:
     for col in range(1, 8):
         sheet.cell(row=currentRow, column=col).value = alum[sheet.cell(row=1, column=col).value]
 # save Excel
-outputExcel.save('alumList.xlsx')
+outputExcel.save('/Users/laurencefinch/Desktop/AutomateBoringStuff/alumList.xlsx')

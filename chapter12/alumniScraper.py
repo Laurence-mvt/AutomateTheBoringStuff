@@ -140,10 +140,6 @@ regexBoth = re.compile(r'((work: |Work: |Seasonal: )(.*)Home: (.*))', re.DOTALL)
 regexWork = re.compile(r'((work: |Work: |Seasonal: )(.*))', re.DOTALL)
 regexHome = re.compile(r'(Home: (.*))', re.DOTALL)
 
-print(f'alumList[-2:]:')
-pprint.pprint(alumList[-2:])
-
-
 for alum in alumList:
     numberLines = countNewLines(alum['addresses'])
     # if both work and home addresses
@@ -170,8 +166,8 @@ for alum in alumList:
     except: # in case of weird address formats
         alum["homeAddress"] = None
         alum["workAddress"] = None
-        alum.pop('addresses', None) 
         logging.debug(f'alum: {alum} | alum[addresses]: {alum["addresses"]}')
+        alum.pop('addresses', None) 
         continue
     # delete addresses key from alum
     alum.pop('addresses', None) 
@@ -196,7 +192,7 @@ outputExcel = openpyxl.Workbook()
 sheet = outputExcel.active
 sheet.title = "New York alums"
 # set Headers
-i = 0
+i = 1
 for header in ['name', 'location', 'experience', 'homeAddress', 'workAddress', 'primaryEmail', 'secondaryEmail']:
     sheet[get_column_letter(i) + str(1)] = header
     i += 1
@@ -204,8 +200,11 @@ for header in ['name', 'location', 'experience', 'homeAddress', 'workAddress', '
 currentRow = 1
 for alum in alumList:
     currentRow += 1
-    # add alum details to the corresponding for that row (alum)
+    # add alum details to the corresponding header for that row (alum)
     for col in range(1, 8):
         sheet.cell(row=currentRow, column=col).value = alum[sheet.cell(row=1, column=col).value]
 # save Excel
 outputExcel.save('/Users/laurencefinch/Desktop/AutomateBoringStuff/alumList.xlsx')
+
+
+# adding this comment to try branching

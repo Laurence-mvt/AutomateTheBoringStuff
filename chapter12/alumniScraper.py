@@ -140,10 +140,6 @@ regexBoth = re.compile(r'((work: |Work: |Seasonal: )(.*)Home: (.*))', re.DOTALL)
 regexWork = re.compile(r'((work: |Work: |Seasonal: )(.*))', re.DOTALL)
 regexHome = re.compile(r'(Home: (.*))', re.DOTALL)
 
-print(f'alumList[-2:]:')
-pprint.pprint(alumList[-2:])
-
-
 for alum in alumList:
     numberLines = countNewLines(alum['addresses'])
     # if both work and home addresses

@@ -13,6 +13,8 @@ logging.basicConfig(level=logging.INFO, format=' %(asctime)s -  %(levelname)s - 
 userEmail = sys.argv[1]
 userPass = sys.argv[2]
 
+# get number of records in existing locations from Excel workbook with stores previously scraped records
+
 # a function to count number of new lines in string, used to parse alum addresses
 def countNewLines(addresses):
     newLineRegex = re.compile("\n")
@@ -174,12 +176,12 @@ def searchFor(city_state, location):
     # get filename as one word
     locationName = location.split(' ')
     locationName = ''.join(locationName) 
-    fileObj = open(f'/Users/laurencefinch/Desktop/AutomateBoringStuff/alumList4_{locationName}.py', 'w')
+    fileObj = open(f'/Users/laurencefinch/Desktop/AutomateBoringStuff/alumScrapeResults/{locationName}.py', 'w')
     fileObj.write('alums = ' + pprint.pformat(alumList) + '\n')
     fileObj.close()
 
     # write to a CSV file
-    outputFile = open(f'/Users/laurencefinch/Desktop/AutomateBoringStuff/alumList4_{locationName}.csv', 'w')
+    outputFile = open(f'/Users/laurencefinch/Desktop/AutomateBoringStuff/alumScrapeResults/{locationName}.csv', 'w')
     outputDictWriter = csv.DictWriter(outputFile, ['name', 'location', 'experience', 'primaryEmail', 'secondaryEmail', 'workAddress', 'homeAddress'])
     outputDictWriter.writeheader()
     for alum in alumList:

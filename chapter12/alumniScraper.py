@@ -26,8 +26,25 @@ regexBoth = re.compile(r'((work: |Work: |Seasonal: )(.*)Home: (.*))', re.DOTALL)
 regexWork = re.compile(r'((work: |Work: |Seasonal: )(.*))', re.DOTALL)
 regexHome = re.compile(r'(Home: (.*))', re.DOTALL)
 
-def searchFor(city_state, location):
+# get user input for locations to search 
+locations = sys.argv[3:]
+# city:New_York, state:California, state:MA, etc... # all spaces replaced by '_'
+# parse city and states into lists
+cities = []
+states = []
+for location in locations:
+    if location[:5].lower() == 'city:':
+        cities.append(' '.join(location[5:].split('_')))
+    elif location[:6].lower() == 'state:':
+        states.append(' '.join(location[6:].split('_')))
+    else:
+        print(f'{location} is not a city or state. Will ignore this argument')
+locations = cities + states
+
+# iterate over each location, searching for those alums and ultimately creating a csv file for them
+for location in locations:
     print(f'starting searching for {location}')
+
     # open chrome browser
     browser = webdriver.Chrome()
     # go to alumni site login page
@@ -39,23 +56,20 @@ def searchFor(city_state, location):
     # login
     browser.find_element_by_name('op').click()
     time.sleep(2)
+    
     # go to alumni directory
     directory = browser.find_element_by_link_text('US Alumni Directory')
     directory.click()
     time.sleep(2)
+    
     # filter for location
-    if city_state == 'city':
+    if location in cities:
         browser.find_element_by_name('filter_location_city').send_keys(location)
-    elif city_state == 'state':
+    elif location in states:
         browser.find_element_by_name('filter_location_state').send_keys(location)
     # search for results
     browser.find_element_by_name('submit').click()
     time.sleep(2)
-    
-    # get alum cards and names to interate over
-
-    alumCardElems = []
-    alumNameElems = []
 
     # Scroll down page to load all results
     # Get scroll height
@@ -76,18 +90,22 @@ def searchFor(city_state, location):
         # else update last height and keep scrolling down to continue loading
         lastHeight = browser.execute_script("return document.body.scrollHeight;")
 
-            
+        
+    # get alum cards and names to iterate over
+    alumCardElems = []
+    alumNameElems = []
+
     # get results of alumni cards
     alumCardElems = alumCardElems + browser.find_elements_by_css_selector('.row.bizcard')
     alumNameElems = alumNameElems + browser.find_elements_by_css_selector('.media-heading.bizcard_zoom_activator')
-    logging.info('length of alumCardElems: ' + str(len(alumCardElems)) + '| length of alumNameElems: ' + str(len(alumNameElems)))
-
-    alumList = []
-
+    
     # get alum Ids
     alumIds = []
     for alum in alumCardElems:
         alumIds.append(alum.get_attribute('id'))
+    logging.info('length of alumIds: ' + str(len(alumIds)))
+
+    alumList = []
 
     # for each .row.bizcard alumCardElem
     for index, nameElem in enumerate(alumNameElems):
@@ -174,13 +192,10 @@ def searchFor(city_state, location):
     
     # write to a CSV file
     locationName = location.split(' ')
-    locationName = ''.join(locationName)
+    locationName = ''.join(locationName).title()
     outputFile = open(f'/Users/laurencefinch/Desktop/AutomateBoringStuff/alumScrapeResults/{locationName}.csv', 'w')
     outputDictWriter = csv.DictWriter(outputFile, ['name', 'location', 'experience', 'primaryEmail', 'secondaryEmail', 'workAddress', 'homeAddress'])
     outputDictWriter.writeheader()
-    for alum in alumList:
-        outputDictWriter.writerow(alum)
+    #for alum in alumList:
+     #   outputDictWriter.writerow(alum)
     outputFile.close()
-
-
-searchFor('city', 'New York')

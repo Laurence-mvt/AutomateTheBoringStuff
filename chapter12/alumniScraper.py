@@ -195,25 +195,3 @@ threadObj.start()
 
 # PROCEED WITH INITIAL THREAD
 searchFor('city', 'New York')
-
-
-"""# write to Excel file 
-outputExcel = openpyxl.Workbook()
-sheet = outputExcel.active
-sheet.title = "New York alums"
-# set Headers
-i = 1
-for header in ['name', 'location', 'experience', 'homeAddress', 'workAddress', 'primaryEmail', 'secondaryEmail']:
-    sheet[get_column_letter(i) + str(1)] = header
-    i += 1
-# loop over alums
-currentRow = 1
-for alum in alumList:
-    currentRow += 1
-    # add alum details to the corresponding header for that row (alum)
-    for col in range(1, 8):
-        sheet.cell(row=currentRow, column=col).value = alum[sheet.cell(row=1, column=col).value]
-# save Excel
-outputExcel.save('/Users/laurencefinch/Desktop/AutomateBoringStuff/alumList.xlsx')
-"""
-

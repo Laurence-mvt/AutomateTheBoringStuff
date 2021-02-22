@@ -19,7 +19,11 @@ userPass = sys.argv[2]
 # a function to count number of new lines in string, used to parse alum addresses
 def countNewLines(addresses):
     newLineRegex = re.compile("\n")
-    mo = newLineRegex.findall(addresses)
+    try:
+        mo = newLineRegex.findall(addresses)
+    except TypeError: # in case of final case or missing addresses
+        traceback.print_exc()
+        return 0
     return len(mo)
 
 # regular expressions used to parse alums' home and work addresses
@@ -207,6 +211,8 @@ for location in locations:
             # delete addresses key from alum
             alum.pop('addresses', None) 
         
+        print(f'finished scraping {location}')
+
         # write to a CSV file
         locationName = location.split(' ')
         for index, location in enumerate(locationName):
@@ -220,5 +226,5 @@ for location in locations:
         outputFile.close()
     except: # if something goes wrong for one location, move to the next one
         print(f'Something really unknown went wrong whilst scraping {location}')
-        traceback.print_exc()()
+        traceback.print_exc()
         continue
